@@ -1,0 +1,1973 @@
+<!-- ============================================================= -->
+<!-- MOGENDI MAIRURA — PORTFOLIO                                    -->
+<!-- Polyglot Engineer · Distributed Systems · Android             -->
+<!-- Single self-contained file. No external image assets.         -->
+<!-- Design language: warm amber-on-espresso "terminal editorial". -->
+<!-- ============================================================= -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mogendi Mairura — polyglot software engineer specialising in high-scale distributed systems, backend architecture and Android. Ruby, Java, Kotlin, Go and more.">
+
+<title>Mogendi Mairura · Polyglot Engineer &amp; Distributed Systems</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================================================== */
+/* 1 · DESIGN TOKENS                                           */
+/* =========================================================== */
+
+:root{
+    /* Surfaces — warm espresso, never pure black */
+    --bg:#14110d;
+    --bg-2:#1a1612;
+    --surface:#211b15;
+    --surface-2:#28201a;
+    --paper:#f2e9da;
+    --paper-2:#e9dcc7;
+
+    /* Text */
+    --cream:#efe6d6;
+    --cream-dim:#cdbfa9;
+    --muted:#9a8a73;
+    --muted-2:#766a57;
+    --ink:#1a140e;
+    --ink-soft:#4a3f31;
+
+    /* Accents — amber leads, rust + sage support data */
+    --amber:#e7a948;
+    --amber-bright:#f6c061;
+    --amber-deep:#c8862c;
+    --rust:#c8633a;
+    --sage:#8aa06f;
+    --violet:#9b8cc4;
+    --sky:#6fa3b8;
+
+    /* Lines & glow */
+    --line:rgba(239,230,214,0.10);
+    --line-strong:rgba(239,230,214,0.20);
+    --line-ink:rgba(26,20,14,0.12);
+    --glow:0 0 0 1px rgba(231,169,72,0.25), 0 24px 60px -20px rgba(0,0,0,0.6);
+    --shadow:0 30px 70px -30px rgba(0,0,0,0.75);
+    --shadow-sm:0 18px 40px -24px rgba(0,0,0,0.6);
+    --shadow-paper:0 24px 50px -28px rgba(60,42,20,0.35);
+
+    /* Type */
+    --display:'Fraunces',Georgia,serif;
+    --body:'Hanken Grotesk',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+
+    --maxw:1280px;
+    --radius:20px;
+    --radius-lg:28px;
+}
+
+/* =========================================================== */
+/* 2 · RESET                                                   */
+/* =========================================================== */
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+
+body{
+    font-family:var(--body);
+    background:var(--bg);
+    color:var(--cream);
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+}
+
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+ul{list-style:none;}
+
+::selection{background:var(--amber);color:var(--bg);}
+
+/* Focus visibility — quality floor */
+a:focus-visible,button:focus-visible{
+    outline:2px solid var(--amber-bright);
+    outline-offset:3px;
+    border-radius:4px;
+}
+
+/* =========================================================== */
+/* 3 · LAYOUT PRIMITIVES                                       */
+/* =========================================================== */
+
+.wrap{
+    width:min(90%,var(--maxw));
+    margin-inline:auto;
+}
+
+.section{
+    padding:clamp(80px,11vw,150px) 0;
+    position:relative;
+}
+
+.section--paper{
+    background:var(--paper);
+    color:var(--ink);
+}
+
+/* Eyebrow / code-comment marker — the structural signature */
+.marker{
+    font-family:var(--mono);
+    font-size:0.74rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--amber);
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-weight:500;
+}
+.marker::before{
+    content:"//";
+    color:var(--muted-2);
+}
+.section--paper .marker{color:var(--amber-deep);}
+.section--paper .marker::before{color:var(--ink-soft);}
+
+.head{
+    max-width:760px;
+    margin-bottom:clamp(48px,6vw,80px);
+}
+.head .marker{margin-bottom:22px;}
+.head h2{
+    font-family:var(--display);
+    font-size:clamp(2.2rem,5vw,3.5rem);
+    font-weight:600;
+    line-height:1.04;
+    letter-spacing:-0.02em;
+    margin-bottom:22px;
+}
+.head h2 em{
+    font-style:italic;
+    font-weight:400;
+    color:var(--amber);
+}
+.section--paper .head h2 em{color:var(--amber-deep);}
+.head p{
+    font-size:clamp(1rem,1.5vw,1.12rem);
+    color:var(--muted);
+    max-width:620px;
+    line-height:1.75;
+}
+.section--paper .head p{color:var(--ink-soft);}
+
+.lede{color:var(--cream-dim);}
+.section--paper .lede{color:var(--ink-soft);}
+
+/* =========================================================== */
+/* 4 · NAVBAR                                                  */
+/* =========================================================== */
+
+.nav{
+    position:fixed;
+    inset:0 0 auto 0;
+    z-index:1000;
+    padding:18px 0;
+    transition:background .35s ease, border-color .35s ease, padding .35s ease;
+    border-bottom:1px solid transparent;
+}
+.nav.is-stuck{
+    background:rgba(20,17,13,0.78);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+    padding:12px 0;
+}
+.nav__inner{
+    width:min(90%,var(--maxw));
+    margin-inline:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+}
+.brand{
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:0.95rem;
+    letter-spacing:0.02em;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    color:var(--cream);
+}
+.brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--sage);
+    box-shadow:0 0 12px var(--sage);
+    animation:pulse 2.4s infinite;
+}
+.brand .accent{color:var(--amber);}
+@keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:.5;transform:scale(.82);}
+}
+
+.nav__links{
+    display:flex;
+    align-items:center;
+    gap:30px;
+}
+.nav__links a{
+    font-family:var(--mono);
+    font-size:0.82rem;
+    color:var(--cream-dim);
+    letter-spacing:0.02em;
+    transition:color .25s;
+    position:relative;
+    padding:4px 0;
+}
+.nav__links a .idx{color:var(--muted-2);margin-right:6px;}
+.nav__links a:hover{color:var(--amber);}
+.nav__links a.is-active{color:var(--amber);}
+.nav__links a.is-active::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:-2px;
+    height:1.5px;
+    background:var(--amber);
+}
+.nav__cta{
+    font-family:var(--mono);
+    font-size:0.82rem;
+    font-weight:600;
+    color:var(--bg);
+    background:var(--amber);
+    padding:9px 18px;
+    border-radius:10px;
+    transition:transform .2s, box-shadow .2s, background .2s;
+}
+.nav__cta:hover{
+    background:var(--amber-bright);
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px -10px rgba(231,169,72,0.7);
+}
+
+.nav__burger{display:none;flex-direction:column;gap:5px;padding:8px;}
+.nav__burger span{width:24px;height:2px;background:var(--cream);border-radius:2px;transition:transform .3s,opacity .3s;}
+.nav.is-open .nav__burger span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav.is-open .nav__burger span:nth-child(2){opacity:0;}
+.nav.is-open .nav__burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* =========================================================== */
+/* 5 · BUTTONS                                                 */
+/* =========================================================== */
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--mono);
+    font-size:0.9rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+    padding:15px 26px;
+    border-radius:12px;
+    transition:transform .22s ease, box-shadow .22s ease, background .22s, border-color .22s;
+}
+.btn .arrow{transition:transform .22s;}
+.btn:hover .arrow{transform:translateX(4px);}
+.btn--primary{
+    background:var(--amber);
+    color:var(--bg);
+    box-shadow:0 16px 36px -16px rgba(231,169,72,0.8);
+}
+.btn--primary:hover{background:var(--amber-bright);transform:translateY(-3px);}
+.btn--ghost{
+    background:transparent;
+    color:var(--cream);
+    border:1px solid var(--line-strong);
+}
+.btn--ghost:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-3px);}
+
+/* =========================================================== */
+/* 6 · HERO                                                    */
+/* =========================================================== */
+
+.hero{
+    position:relative;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    align-items:center;
+    gap:64px;
+    padding-top:140px;
+    padding-bottom:90px;
+}
+
+/* ambient distributed-node field */
+.hero__field{
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    overflow:hidden;
+    pointer-events:none;
+}
+.hero__field::before{
+    content:"";
+    position:absolute;
+    width:720px;height:720px;
+    top:-220px;right:-180px;
+    background:radial-gradient(circle,rgba(231,169,72,0.16),transparent 65%);
+    filter:blur(20px);
+}
+.hero__field::after{
+    content:"";
+    position:absolute;
+    width:520px;height:520px;
+    bottom:-200px;left:-160px;
+    background:radial-gradient(circle,rgba(111,163,184,0.12),transparent 65%);
+    filter:blur(20px);
+}
+.hero__grid-bg{
+    position:absolute;inset:0;
+    background-image:
+        linear-gradient(var(--line) 1px,transparent 1px),
+        linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 80%);
+    opacity:.5;
+}
+
+.hero__avail{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--mono);
+    font-size:0.78rem;
+    letter-spacing:0.06em;
+    color:var(--cream-dim);
+    padding:7px 14px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:var(--surface);
+    margin-bottom:30px;
+}
+.hero__avail .blink{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--sage);
+    box-shadow:0 0 10px var(--sage);
+    animation:pulse 2s infinite;
+}
+
+.hero h1{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(2.7rem,6.4vw,5.2rem);
+    line-height:0.98;
+    letter-spacing:-0.025em;
+    margin-bottom:26px;
+}
+.hero h1 em{font-style:italic;font-weight:400;color:var(--amber);}
+.hero h1 .thin{font-weight:300;color:var(--cream-dim);}
+
+.hero__role{
+    font-family:var(--mono);
+    font-size:clamp(0.92rem,1.6vw,1.08rem);
+    color:var(--amber);
+    margin-bottom:24px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 14px;
+    align-items:center;
+}
+.hero__role .sep{color:var(--muted-2);}
+
+.hero__intro{
+    font-size:clamp(1rem,1.5vw,1.12rem);
+    color:var(--cream-dim);
+    max-width:560px;
+    line-height:1.8;
+    margin-bottom:36px;
+}
+.hero__intro strong{color:var(--cream);font-weight:600;}
+
+.hero__cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:42px;}
+
+/* language ribbon ticker */
+.ribbon{
+    border-top:1px solid var(--line);
+    padding-top:20px;
+}
+.ribbon__label{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+    margin-bottom:12px;
+    display:block;
+}
+.ribbon__track{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+.ribbon__chip{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--cream-dim);
+    padding:5px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:rgba(239,230,214,0.03);
+    transition:border-color .2s,color .2s,transform .2s;
+}
+.ribbon__chip:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px);}
+
+/* ---- Terminal card (signature) ---- */
+.hero__right{display:flex;justify-content:center;}
+.terminal{
+    width:100%;
+    max-width:430px;
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    font-family:var(--mono);
+    position:relative;
+}
+.terminal::after{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(circle at 80% 0%,rgba(231,169,72,0.10),transparent 55%);
+    pointer-events:none;
+}
+.terminal__bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    background:rgba(0,0,0,0.2);
+}
+.terminal__dot{width:11px;height:11px;border-radius:50%;}
+.terminal__dot.r{background:#d65d4e;}
+.terminal__dot.y{background:var(--amber);}
+.terminal__dot.g{background:var(--sage);}
+.terminal__title{
+    margin-left:10px;
+    font-size:0.76rem;
+    color:var(--muted);
+    letter-spacing:0.03em;
+}
+.terminal__body{
+    padding:24px 22px 28px;
+    font-size:0.84rem;
+    line-height:1.85;
+    position:relative;
+    z-index:1;
+}
+.terminal__line{white-space:pre-wrap;}
+.t-prompt{color:var(--sage);}
+.t-flag{color:var(--amber);}
+.t-key{color:var(--sky);}
+.t-str{color:var(--amber-bright);}
+.t-comment{color:var(--muted-2);}
+.t-out{color:var(--cream-dim);}
+.t-cursor{
+    display:inline-block;
+    width:9px;height:1.05em;
+    background:var(--amber);
+    vertical-align:-2px;
+    animation:blink 1.1s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+
+.terminal__footer{
+    border-top:1px solid var(--line);
+    padding:14px 22px;
+    display:flex;
+    justify-content:space-between;
+    font-size:0.72rem;
+    color:var(--muted-2);
+    background:rgba(0,0,0,0.2);
+}
+
+/* =========================================================== */
+/* 7 · STATS STRIP                                             */
+/* =========================================================== */
+
+.stats{
+    position:relative;
+    z-index:3;
+    margin-top:-40px;
+}
+.stats__grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--surface);
+    box-shadow:var(--shadow-sm);
+}
+.stat{
+    padding:34px 26px;
+    border-right:1px solid var(--line);
+    position:relative;
+}
+.stat:last-child{border-right:none;}
+.stat__num{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(2.1rem,3.6vw,2.9rem);
+    line-height:1;
+    color:var(--amber);
+    letter-spacing:-0.02em;
+}
+.stat__num .unit{font-size:0.5em;color:var(--cream-dim);margin-left:2px;}
+.stat__label{
+    font-family:var(--mono);
+    font-size:0.74rem;
+    letter-spacing:0.04em;
+    color:var(--muted);
+    margin-top:12px;
+}
+
+/* =========================================================== */
+/* 8 · ABOUT                                                   */
+/* =========================================================== */
+
+.about{
+    display:grid;
+    grid-template-columns:1.25fr 0.75fr;
+    gap:54px;
+    align-items:start;
+}
+.about__body p{
+    font-size:1.06rem;
+    line-height:1.85;
+    margin-bottom:22px;
+    color:var(--ink-soft);
+}
+.about__body p:last-child{margin-bottom:0;}
+.about__body .big{
+    font-family:var(--display);
+    font-size:clamp(1.4rem,2.4vw,1.85rem);
+    font-weight:500;
+    line-height:1.4;
+    color:var(--ink);
+    margin-bottom:30px;
+    letter-spacing:-0.01em;
+}
+.about__body .big em{font-style:italic;color:var(--amber-deep);}
+
+.about__aside{display:flex;flex-direction:column;gap:18px;}
+.factcard{
+    background:var(--paper-2);
+    border:1px solid var(--line-ink);
+    border-radius:18px;
+    padding:24px 26px;
+}
+.factcard .marker{margin-bottom:14px;}
+.factcard__row{
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    padding:9px 0;
+    border-bottom:1px dashed var(--line-ink);
+    font-size:0.92rem;
+}
+.factcard__row:last-child{border-bottom:none;}
+.factcard__row .k{color:var(--ink-soft);font-family:var(--mono);font-size:0.8rem;}
+.factcard__row .v{color:var(--ink);font-weight:600;text-align:right;}
+
+/* =========================================================== */
+/* 9 · SKILLS                                                  */
+/* =========================================================== */
+
+.skills__grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+}
+.skillcard{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:30px 30px 32px;
+    transition:border-color .3s, transform .3s;
+}
+.skillcard:hover{border-color:var(--line-strong);transform:translateY(-4px);}
+.skillcard__top{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
+}
+.skillcard__no{
+    font-family:var(--mono);
+    font-size:0.82rem;
+    color:var(--amber);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:5px 9px;
+}
+.skillcard h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.3rem;
+    letter-spacing:-0.01em;
+}
+.skillcard p{
+    color:var(--muted);
+    font-size:0.92rem;
+    line-height:1.7;
+    margin-bottom:20px;
+}
+.tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    color:var(--cream-dim);
+    padding:5px 11px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:rgba(239,230,214,0.03);
+    transition:color .2s,border-color .2s;
+}
+.tag:hover{color:var(--amber);border-color:var(--amber);}
+
+/* polyglot meter row */
+.poly{margin-top:30px;}
+.poly__row{
+    display:grid;
+    grid-template-columns:130px 1fr 56px;
+    align-items:center;
+    gap:18px;
+    padding:11px 0;
+    border-bottom:1px solid var(--line);
+}
+.poly__row:last-child{border-bottom:none;}
+.poly__name{font-family:var(--mono);font-size:0.86rem;color:var(--cream);}
+.poly__bar{height:7px;border-radius:99px;background:rgba(239,230,214,0.07);overflow:hidden;}
+.poly__fill{
+    height:100%;
+    border-radius:99px;
+    background:linear-gradient(90deg,var(--amber-deep),var(--amber-bright));
+    width:0;
+    transition:width 1.3s cubic-bezier(.2,.7,.2,1);
+}
+.poly__pct{font-family:var(--mono);font-size:0.78rem;color:var(--muted);text-align:right;}
+
+/* =========================================================== */
+/* 10 · PROJECTS                                               */
+/* =========================================================== */
+
+.proj__filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:42px;
+}
+.filter{
+    font-family:var(--mono);
+    font-size:0.8rem;
+    color:var(--muted);
+    padding:9px 16px;
+    border:1px solid var(--line);
+    border-radius:99px;
+    transition:all .22s;
+}
+.filter:hover{color:var(--cream);border-color:var(--line-strong);}
+.filter.is-active{
+    color:var(--bg);
+    background:var(--amber);
+    border-color:var(--amber);
+}
+
+.proj__grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+}
+.project{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:border-color .3s, transform .3s, box-shadow .3s;
+}
+.project:hover{
+    border-color:var(--line-strong);
+    transform:translateY(-6px);
+    box-shadow:var(--shadow-sm);
+}
+.project__band{
+    height:5px;
+    width:100%;
+    background:linear-gradient(90deg,var(--amber-deep),var(--amber),var(--rust));
+}
+.project[data-cat="mobile"] .project__band{background:linear-gradient(90deg,var(--sage),#b6c79a);}
+.project[data-cat="platform"] .project__band{background:linear-gradient(90deg,var(--amber-deep),var(--amber-bright));}
+.project[data-cat="data"] .project__band{background:linear-gradient(90deg,var(--sky),#9fc6d4);}
+.project[data-cat="web"] .project__band{background:linear-gradient(90deg,var(--rust),#e08a5f);}
+
+.project__inner{padding:30px 30px 32px;display:flex;flex-direction:column;flex:1;}
+.project__meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--mono);
+    font-size:0.75rem;
+    color:var(--muted-2);
+    margin-bottom:18px;
+}
+.project__no{color:var(--amber);}
+.project__cat{
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    padding:3px 9px;
+    border:1px solid var(--line);
+    border-radius:6px;
+}
+.project h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.42rem;
+    line-height:1.2;
+    letter-spacing:-0.01em;
+    margin-bottom:6px;
+}
+.project__org{
+    font-family:var(--mono);
+    font-size:0.8rem;
+    color:var(--amber);
+    margin-bottom:16px;
+}
+.project p{
+    color:var(--cream-dim);
+    font-size:0.94rem;
+    line-height:1.72;
+    margin-bottom:20px;
+}
+.project__stats{
+    display:flex;
+    gap:24px;
+    margin-bottom:20px;
+    padding:16px 0;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+}
+.project__stat .n{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.35rem;
+    color:var(--amber);
+    line-height:1;
+}
+.project__stat .l{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    color:var(--muted-2);
+    margin-top:6px;
+    letter-spacing:0.04em;
+}
+.project .tags{margin-top:auto;}
+
+/* hidden state for filtering */
+.project.is-hidden{display:none;}
+
+/* =========================================================== */
+/* 11 · EXPERIENCE TIMELINE                                    */
+/* =========================================================== */
+
+.timeline{
+    position:relative;
+    margin-left:8px;
+    padding-left:38px;
+    border-left:1.5px solid var(--line-ink);
+}
+.tl{
+    position:relative;
+    padding-bottom:46px;
+}
+.tl:last-child{padding-bottom:0;}
+.tl::before{
+    content:"";
+    position:absolute;
+    left:-46px;
+    top:5px;
+    width:15px;height:15px;
+    border-radius:50%;
+    background:var(--paper);
+    border:3px solid var(--amber-deep);
+}
+.tl.is-now::before{
+    background:var(--amber);
+    box-shadow:0 0 0 5px rgba(231,169,72,0.18);
+}
+.tl__date{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--amber-deep);
+    letter-spacing:0.04em;
+    margin-bottom:8px;
+}
+.tl__date .now{
+    background:var(--amber-deep);
+    color:var(--paper);
+    padding:2px 8px;
+    border-radius:6px;
+    margin-left:8px;
+    font-size:0.72rem;
+}
+.tl h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.32rem;
+    color:var(--ink);
+    letter-spacing:-0.01em;
+}
+.tl__org{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+}
+.tl ul{display:flex;flex-direction:column;gap:9px;}
+.tl li{
+    position:relative;
+    padding-left:20px;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+    line-height:1.65;
+}
+.tl li::before{
+    content:"›";
+    position:absolute;left:0;
+    color:var(--amber-deep);
+    font-weight:700;
+}
+
+/* =========================================================== */
+/* 12 · EDUCATION + CERTS                                      */
+/* =========================================================== */
+
+.edu__grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:24px;
+}
+.edu__col{display:flex;flex-direction:column;gap:18px;}
+.edu{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:26px 28px;
+    transition:border-color .3s,transform .3s;
+}
+.edu:hover{border-color:var(--line-strong);transform:translateX(4px);}
+.edu__year{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--amber);
+    margin-bottom:8px;
+}
+.edu h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.16rem;
+    margin-bottom:5px;
+    letter-spacing:-0.01em;
+}
+.edu p{color:var(--muted);font-size:0.9rem;}
+
+.minicard{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:26px 28px;
+}
+.minicard .marker{margin-bottom:16px;}
+.minicard__item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+    font-size:0.92rem;
+}
+.minicard__item:last-child{border-bottom:none;}
+.minicard__item .ic{color:var(--amber);font-family:var(--mono);}
+.minicard__item .lang-bar{
+    margin-left:auto;
+    font-family:var(--mono);
+    font-size:0.74rem;
+    color:var(--sage);
+}
+
+/* =========================================================== */
+/* 13 · CONTACT                                                */
+/* =========================================================== */
+
+.contact{position:relative;z-index:1;}
+.contact__box{
+    background:linear-gradient(165deg,var(--surface-2),var(--surface));
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius-lg);
+    padding:clamp(40px,6vw,70px);
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+.contact__box::before{
+    content:"";
+    position:absolute;
+    width:480px;height:480px;
+    top:-200px;left:50%;transform:translateX(-50%);
+    background:radial-gradient(circle,rgba(231,169,72,0.16),transparent 65%);
+    filter:blur(20px);
+    pointer-events:none;
+}
+.contact__box .marker{justify-content:center;margin-bottom:22px;}
+.contact__box h2{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(2rem,4.5vw,3.2rem);
+    line-height:1.06;
+    letter-spacing:-0.02em;
+    margin-bottom:20px;
+    position:relative;
+}
+.contact__box h2 em{font-style:italic;color:var(--amber);}
+.contact__box > p{
+    color:var(--cream-dim);
+    max-width:540px;
+    margin:0 auto 38px;
+    line-height:1.75;
+    position:relative;
+}
+.contact__links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    justify-content:center;
+    position:relative;
+}
+.clink{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 22px;
+    transition:border-color .25s,transform .25s,background .25s;
+    text-align:left;
+}
+.clink:hover{border-color:var(--amber);transform:translateY(-3px);}
+.clink__ic{
+    font-family:var(--mono);
+    font-size:1.1rem;
+    color:var(--amber);
+    width:26px;text-align:center;
+}
+.clink__k{font-family:var(--mono);font-size:0.7rem;color:var(--muted-2);letter-spacing:0.08em;text-transform:uppercase;}
+.clink__v{font-size:0.92rem;color:var(--cream);font-weight:500;}
+
+/* =========================================================== */
+/* 14 · FOOTER                                                 */
+/* =========================================================== */
+
+.footer{
+    border-top:1px solid var(--line);
+    padding:46px 0 40px;
+}
+.footer__inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:24px;
+    flex-wrap:wrap;
+}
+.footer__brand{
+    font-family:var(--mono);
+    font-weight:600;
+    color:var(--cream);
+}
+.footer__brand .accent{color:var(--amber);}
+.footer p{font-family:var(--mono);font-size:0.78rem;color:var(--muted-2);}
+.footer__top{
+    font-family:var(--mono);
+    font-size:0.8rem;
+    color:var(--muted);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:color .2s;
+}
+.footer__top:hover{color:var(--amber);}
+
+/* =========================================================== */
+/* 15 · SCROLL REVEAL                                          */
+/* =========================================================== */
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
+.reveal.is-in{opacity:1;transform:none;}
+.reveal[data-d="1"]{transition-delay:.08s;}
+.reveal[data-d="2"]{transition-delay:.16s;}
+.reveal[data-d="3"]{transition-delay:.24s;}
+.reveal[data-d="4"]{transition-delay:.32s;}
+
+/* =========================================================== */
+/* 16 · RESPONSIVE                                             */
+/* =========================================================== */
+
+@media(max-width:980px){
+    .hero{grid-template-columns:1fr;gap:48px;padding-top:120px;}
+    .hero__right{justify-content:flex-start;}
+    .terminal{max-width:480px;}
+    .about{grid-template-columns:1fr;gap:36px;}
+    .edu__grid{grid-template-columns:1fr;}
+    .stats__grid{grid-template-columns:repeat(2,1fr);}
+    .stat:nth-child(2){border-right:none;}
+    .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line);}
+}
+
+@media(max-width:760px){
+    .nav__links{
+        position:fixed;
+        inset:64px 0 auto 0;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+        background:rgba(20,17,13,0.97);
+        backdrop-filter:blur(14px);
+        padding:18px 5%;
+        border-bottom:1px solid var(--line);
+        transform:translateY(-130%);
+        transition:transform .35s ease;
+    }
+    .nav.is-open .nav__links{transform:translateY(0);}
+    .nav__links a{font-size:1rem;padding:10px 0;width:100%;}
+    .nav__cta{display:none;}
+    .nav__burger{display:flex;}
+    .skills__grid{grid-template-columns:1fr;}
+    .proj__grid{grid-template-columns:1fr;}
+    .poly__row{grid-template-columns:90px 1fr 44px;gap:12px;}
+}
+
+@media(max-width:480px){
+    .stats__grid{grid-template-columns:1fr;}
+    .stat{border-right:none;border-bottom:1px solid var(--line);}
+    .stat:last-child{border-bottom:none;}
+    .project__stats{flex-wrap:wrap;gap:16px;}
+    .hero__cta{flex-direction:column;}
+    .hero__cta .btn{width:100%;justify-content:center;}
+}
+
+/* =========================================================== */
+/* 17 · REDUCED MOTION                                         */
+/* =========================================================== */
+
+@media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}
+    .reveal{opacity:1;transform:none;}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ========================= NAV ========================= -->
+<nav class="nav" id="nav">
+    <div class="nav__inner">
+        <a href="#top" class="brand">
+            <span class="dot"></span>
+            <span>mogendi<span class="accent">.</span>mairura</span>
+        </a>
+        <div class="nav__links" id="navLinks">
+            <a href="#about"><span class="idx">01</span>about</a>
+            <a href="#stack"><span class="idx">02</span>stack</a>
+            <a href="#work"><span class="idx">03</span>work</a>
+            <a href="#experience"><span class="idx">04</span>experience</a>
+            <a href="#education"><span class="idx">05</span>education</a>
+            <a href="#contact" class="nav__cta">$ ./contact</a>
+        </div>
+        <button class="nav__burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- ========================= HERO ========================= -->
+<header class="section" id="top">
+    <div class="hero__field">
+        <div class="hero__grid-bg"></div>
+    </div>
+    <div class="wrap hero">
+        <div class="hero__left">
+            <span class="hero__avail"><span class="blink"></span>Open to principal &amp; staff engineering roles</span>
+
+            <h1>I build <em>high-scale</em><br>systems in <span class="thin">whatever<br>language</span> the<br>challenge needs.</h1>
+
+            <div class="hero__role">
+                <span>Polyglot Software Engineer</span>
+                <span class="sep">·</span>
+                <span>Distributed Systems</span>
+                <span class="sep">·</span>
+                <span>Android / Kotlin</span>
+            </div>
+
+            <p class="hero__intro">
+                I'm <strong>Mogendi Mairura</strong> — a software engineer with a decade-plus across commercial and open-source work, from Brazil's largest news and fintech platforms to scalable payment microservices in the UK. I have <strong>no favourite language</strong>; I'm the kind of developer driven by the problem in front of me.
+            </p>
+
+            <div class="hero__cta">
+                <a href="#work" class="btn btn--primary">View selected work <span class="arrow">→</span></a>
+                <a href="#contact" class="btn btn--ghost">Get in touch</a>
+            </div>
+
+            <div class="ribbon">
+                <span class="ribbon__label">// languages &amp; runtimes I ship with</span>
+                <div class="ribbon__track">
+                    <span class="ribbon__chip">Ruby</span>
+                    <span class="ribbon__chip">Java</span>
+                    <span class="ribbon__chip">Kotlin</span>
+                    <span class="ribbon__chip">Go</span>
+                    <span class="ribbon__chip">JavaScript</span>
+                    <span class="ribbon__chip">Node.js</span>
+                    <span class="ribbon__chip">Perl</span>
+                    <span class="ribbon__chip">Shell</span>
+                    <span class="ribbon__chip">SQL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- signature: whoami terminal -->
+        <div class="hero__right">
+            <div class="terminal" id="terminal">
+                <div class="terminal__bar">
+                    <span class="terminal__dot r"></span>
+                    <span class="terminal__dot y"></span>
+                    <span class="terminal__dot g"></span>
+                    <span class="terminal__title">mogendi@uk:~ — zsh</span>
+                </div>
+                <div class="terminal__body">
+                    <div class="terminal__line"><span class="t-prompt">➜ ~</span> <span id="typed"></span><span class="t-cursor" id="cursor"></span></div>
+                    <div id="termOut" style="margin-top:14px;"></div>
+                </div>
+                <div class="terminal__footer">
+                    <span>uptime 99.99%</span>
+                    <span>Ipswich · UTC+0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ========================= STATS ========================= -->
+<section class="stats">
+    <div class="wrap">
+        <div class="stats__grid reveal">
+            <div class="stat">
+                <div class="stat__num"><span data-count="10" data-suffix="+">0</span></div>
+                <div class="stat__label">years shipping software</div>
+            </div>
+            <div class="stat">
+                <div class="stat__num"><span data-count="9">0</span></div>
+                <div class="stat__label">languages in production</div>
+            </div>
+            <div class="stat">
+                <div class="stat__num"><span data-count="99.99" data-decimals="2">0</span><span class="unit">%</span></div>
+                <div class="stat__label">platform uptime delivered</div>
+            </div>
+            <div class="stat">
+                <div class="stat__num"><span data-count="8">0</span></div>
+                <div class="stat__label">companies &amp; 2 continents</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= ABOUT ========================= -->
+<section class="section section--paper" id="about">
+    <div class="wrap">
+        <div class="head reveal">
+            <span class="marker">01 · about</span>
+            <h2>A polyglot programmer, <em>driven by the challenge</em> rather than the toolchain.</h2>
+        </div>
+
+        <div class="about">
+            <div class="about__body reveal" data-d="1">
+                <p class="big">My background is built from a lot of technologies, applied to web projects that mostly demanded serious scalability and lived inside distributed architectures.</p>
+                <p>I work mainly on web and backend systems, where Ruby and Java are my deepest specialities — but I consider myself language-agnostic. Over the years that's meant Kotlin and Jetpack Compose for Android, Go with ImageMagick for image services, Node.js for real-time websocket layers, and Perl and Shell wherever a pipeline needed gluing together.</p>
+                <p>I've owned architecture at companies like Nubank and Scott Logic, taught Java and web development as an instructor at Caelum, and built the entire backend behind Santos' largest food-delivery service. Whether the work is a 99.99%-uptime payments platform or a video-publishing pipeline serving one of Brazil's most-visited portals, I care about the same things: scalability, resilience, and code other engineers can live with.</p>
+                <p>Alongside building, I mentor engineers, define engineering standards, and translate business goals into roadmaps teams can actually deliver.</p>
+            </div>
+
+            <aside class="about__aside reveal" data-d="2">
+                <div class="factcard">
+                    <span class="marker">profile</span>
+                    <div class="factcard__row"><span class="k">based in</span><span class="v">Ipswich, UK</span></div>
+                    <div class="factcard__row"><span class="k">focus</span><span class="v">Backend · Distributed</span></div>
+                    <div class="factcard__row"><span class="k">also</span><span class="v">Android / Kotlin</span></div>
+                    <div class="factcard__row"><span class="k">methods</span><span class="v">Scrum · Kanban</span></div>
+                    <div class="factcard__row"><span class="k">status</span><span class="v">Open to roles</span></div>
+                </div>
+                <div class="factcard">
+                    <span class="marker">what i optimise for</span>
+                    <div class="factcard__row"><span class="k">scale</span><span class="v">millions of users</span></div>
+                    <div class="factcard__row"><span class="k">reliability</span><span class="v">incident-ready</span></div>
+                    <div class="factcard__row"><span class="k">teams</span><span class="v">mentored &amp; led</span></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= STACK / SKILLS ========================= -->
+<section class="section" id="stack">
+    <div class="wrap">
+        <div class="head reveal">
+            <span class="marker">02 · the stack</span>
+            <h2>Comfortable across the whole system — <em>and the languages that run it</em>.</h2>
+            <p class="lede">From request routing and message queues down to camera pipelines on Android, here's where I spend my time and the tools I reach for.</p>
+        </div>
+
+        <div class="skills__grid">
+            <div class="skillcard reveal" data-d="1">
+                <div class="skillcard__top">
+                    <span class="skillcard__no">01</span>
+                    <h3>Backend &amp; APIs</h3>
+                </div>
+                <p>Service design, REST and contract-first APIs, and the day-to-day craft of building things that stay maintainable as they grow.</p>
+                <div class="tags">
+                    <span class="tag">Ruby on Rails</span>
+                    <span class="tag">Sinatra</span>
+                    <span class="tag">Spring</span>
+                    <span class="tag">Hibernate</span>
+                    <span class="tag">VRaptor</span>
+                    <span class="tag">OpenAPI</span>
+                    <span class="tag">gRPC</span>
+                </div>
+            </div>
+
+            <div class="skillcard reveal" data-d="2">
+                <div class="skillcard__top">
+                    <span class="skillcard__no">02</span>
+                    <h3>Distributed Systems</h3>
+                </div>
+                <p>Microservices and event-driven architectures designed for scalability, resilience and long-term maintainability — the kind that earn a 99.99% uptime guarantee.</p>
+                <div class="tags">
+                    <span class="tag">Microservices</span>
+                    <span class="tag">Kafka</span>
+                    <span class="tag">Redis</span>
+                    <span class="tag">WebSockets</span>
+                    <span class="tag">Event-driven</span>
+                    <span class="tag">Caching</span>
+                </div>
+            </div>
+
+            <div class="skillcard reveal" data-d="1">
+                <div class="skillcard__top">
+                    <span class="skillcard__no">03</span>
+                    <h3>Android / Mobile</h3>
+                </div>
+                <p>Modern Kotlin Android with MVVM and Clean Architecture, high-performance networking, background work and rich media — built to be testable and maintainable.</p>
+                <div class="tags">
+                    <span class="tag">Kotlin</span>
+                    <span class="tag">Jetpack Compose</span>
+                    <span class="tag">Coroutines</span>
+                    <span class="tag">Hilt</span>
+                    <span class="tag">Room</span>
+                    <span class="tag">Retrofit · OkHttp</span>
+                    <span class="tag">CameraX</span>
+                    <span class="tag">Media3 / ExoPlayer</span>
+                </div>
+            </div>
+
+            <div class="skillcard reveal" data-d="2">
+                <div class="skillcard__top">
+                    <span class="skillcard__no">04</span>
+                    <h3>Cloud &amp; Data</h3>
+                </div>
+                <p>Media and data pipelines on AWS, real-time analytics, and the production debugging that turns bottlenecks into stable, predictable services.</p>
+                <div class="tags">
+                    <span class="tag">AWS · EC2</span>
+                    <span class="tag">S3</span>
+                    <span class="tag">SQS · SNS</span>
+                    <span class="tag">MySQL</span>
+                    <span class="tag">Real-time analytics</span>
+                    <span class="tag">Go · ImageMagick</span>
+                </div>
+            </div>
+
+            <div class="skillcard reveal" data-d="1">
+                <div class="skillcard__top">
+                    <span class="skillcard__no">05</span>
+                    <h3>Quality &amp; Practice</h3>
+                </div>
+                <p>QA, testing discipline and the full software development lifecycle — code review, sprint process and release protocols that raise a whole team's bar.</p>
+                <div class="tags">
+                    <span class="tag">Quality assurance</span>
+                    <span class="tag">Testing</span>
+                    <span class="tag">CI/CD</span>
+                    <span class="tag">Code review</span>
+                    <span class="tag">Scrum · Kanban</span>
+                    <span class="tag">SDLC</span>
+                </div>
+            </div>
+
+            <div class="skillcard reveal" data-d="2">
+                <div class="skillcard__top">
+                    <span class="skillcard__no">06</span>
+                    <h3>Leadership &amp; Craft</h3>
+                </div>
+                <p>Technical strategy, mentorship and turning business objectives into technical roadmaps — plus reviewing AI-assisted tooling for idiomatic, correct, clean code.</p>
+                <div class="tags">
+                    <span class="tag">Architecture</span>
+                    <span class="tag">Mentorship</span>
+                    <span class="tag">Tech strategy</span>
+                    <span class="tag">Roadmapping</span>
+                    <span class="tag">Standards</span>
+                    <span class="tag">AI-assisted tooling</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- polyglot proficiency meters -->
+        <div class="poly reveal" data-d="2" id="poly">
+            <div class="poly__row">
+                <span class="poly__name">Ruby</span>
+                <div class="poly__bar"><span class="poly__fill" data-w="95"></span></div>
+                <span class="poly__pct">expert</span>
+            </div>
+            <div class="poly__row">
+                <span class="poly__name">Java</span>
+                <div class="poly__bar"><span class="poly__fill" data-w="93"></span></div>
+                <span class="poly__pct">expert</span>
+            </div>
+            <div class="poly__row">
+                <span class="poly__name">Kotlin</span>
+                <div class="poly__bar"><span class="poly__fill" data-w="88"></span></div>
+                <span class="poly__pct">advanced</span>
+            </div>
+            <div class="poly__row">
+                <span class="poly__name">JavaScript</span>
+                <div class="poly__bar"><span class="poly__fill" data-w="85"></span></div>
+                <span class="poly__pct">advanced</span>
+            </div>
+            <div class="poly__row">
+                <span class="poly__name">Go</span>
+                <div class="poly__bar"><span class="poly__fill" data-w="72"></span></div>
+                <span class="poly__pct">proficient</span>
+            </div>
+            <div class="poly__row">
+                <span class="poly__name">Perl</span>
+                <div class="poly__bar"><span class="poly__fill" data-w="68"></span></div>
+                <span class="poly__pct">proficient</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= WORK / PROJECTS ========================= -->
+<section class="section section--paper" id="work">
+    <div class="wrap">
+        <div class="head reveal">
+            <span class="marker">03 · selected work</span>
+            <h2>Ten systems I architected, <em>scaled and shipped</em>.</h2>
+            <p>Spanning payments, fintech-grade distributed platforms, AI features, cloud migrations, mobile and real-time media — across Scott Logic, Nubank, R7.com and beyond.</p>
+        </div>
+
+        <div class="proj__filters reveal" id="filters">
+            <button class="filter is-active" data-filter="all">all</button>
+            <button class="filter" data-filter="platform">platforms</button>
+            <button class="filter" data-filter="data">ai &amp; data</button>
+            <button class="filter" data-filter="mobile">mobile</button>
+            <button class="filter" data-filter="web">web &amp; media</button>
+        </div>
+
+        <div class="proj__grid" id="projGrid">
+
+            <!-- 01 -->
+            <article class="project reveal" data-cat="platform">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-01</span><span class="project__cat">platform</span></div>
+                    <h3>Nimbus Payments Platform</h3>
+                    <div class="project__org">Scott Logic · 2024–now</div>
+                    <p>Designed and implemented the underlying microservices architecture for a payments platform built to be highly scalable, with a 99.99% uptime guarantee and clean service boundaries that survive growth.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">99.99%</div><div class="l">uptime guarantee</div></div>
+                        <div class="project__stat"><div class="n">µservices</div><div class="l">from the ground up</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Java</span><span class="tag">Kafka</span><span class="tag">PostgreSQL</span><span class="tag">Kubernetes</span></div>
+                </div>
+            </article>
+
+            <!-- 02 -->
+            <article class="project reveal" data-cat="platform">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-02</span><span class="project__cat">platform</span></div>
+                    <h3>Atlas Distributed Systems Platform</h3>
+                    <div class="project__org">Nubank · São Paulo</div>
+                    <p>Directed the end-to-end architecture and technical strategy for a distributed platform engineered for high scalability, resiliency and long-term maintainability — the backbone other teams built on top of.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">E2E</div><div class="l">architecture owner</div></div>
+                        <div class="project__stat"><div class="n">Resilient</div><div class="l">by design</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Clojure</span><span class="tag">Kafka</span><span class="tag">Cassandra</span><span class="tag">AWS</span></div>
+                </div>
+            </article>
+
+            <!-- 03 -->
+            <article class="project reveal" data-cat="data">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-03</span><span class="project__cat">ai &amp; data</span></div>
+                    <h3>Helios AI Recommendations Engine</h3>
+                    <div class="project__org">Scott Logic</div>
+                    <p>Directed development of complex features for an AI-driven recommendations engine, while coaching and mentoring the engineers building it — pairing model-serving infrastructure with idiomatic, well-tested code.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">AI</div><div class="l">recommendations</div></div>
+                        <div class="project__stat"><div class="n">Mentored</div><div class="l">the build team</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Python</span><span class="tag">gRPC</span><span class="tag">Feature store</span><span class="tag">Java</span></div>
+                </div>
+            </article>
+
+            <!-- 04 -->
+            <article class="project reveal" data-cat="platform">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-04</span><span class="project__cat">platform</span></div>
+                    <h3>Apollo API Modernization</h3>
+                    <div class="project__org">Scott Logic · Nubank</div>
+                    <p>Introduced company-wide engineering standards — raising code quality, test thoroughness and deployment reliability across teams by reviewing high-impact designs and embedding best practice.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">Org-wide</div><div class="l">standards</div></div>
+                        <div class="project__stat"><div class="n">Reliable</div><div class="l">deployments</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">OpenAPI</span><span class="tag">Contract testing</span><span class="tag">CI/CD</span><span class="tag">Code review</span></div>
+                </div>
+            </article>
+
+            <!-- 05 -->
+            <article class="project reveal" data-cat="platform">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-05</span><span class="project__cat">platform</span></div>
+                    <h3>Orion Cloud Migration Program</h3>
+                    <div class="project__org">Scott Logic</div>
+                    <p>Synchronised a cross-team migration — backend, DevOps and data engineering — to hit delivery milestones without disrupting live services, coordinating the moving parts into a single roadmap.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">3 teams</div><div class="l">coordinated</div></div>
+                        <div class="project__stat"><div class="n">On-time</div><div class="l">milestones</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">AWS</span><span class="tag">Terraform</span><span class="tag">Kafka</span><span class="tag">DevOps</span></div>
+                </div>
+            </article>
+
+            <!-- 06 -->
+            <article class="project reveal" data-cat="platform">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-06</span><span class="project__cat">platform</span></div>
+                    <h3>Customer Identity &amp; Access Revamp</h3>
+                    <div class="project__org">Scott Logic</div>
+                    <p>Guided the significant technical choices — tech-stack selection and integration security patterns — for a ground-up rework of customer identity and access, balancing security with developer ergonomics.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">OAuth2</div><div class="l">+ OIDC</div></div>
+                        <div class="project__stat"><div class="n">Secure</div><div class="l">integrations</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Java</span><span class="tag">Keycloak</span><span class="tag">OAuth2 / OIDC</span><span class="tag">mTLS</span></div>
+                </div>
+            </article>
+
+            <!-- 07 -->
+            <article class="project reveal" data-cat="mobile">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-07</span><span class="project__cat">mobile</span></div>
+                    <h3>Nova Mobile App Expansion</h3>
+                    <div class="project__org">Endava · Scott Logic</div>
+                    <p>Built modern Android with Kotlin, Jetpack Compose, ViewModel, Hilt, Coroutines and Room — on MVVM and Clean Architecture — plus high-performance networking and camera/media features with CameraX and ExoPlayer.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">Compose</div><div class="l">+ Clean Arch</div></div>
+                        <div class="project__stat"><div class="n">Media3</div><div class="l">camera &amp; video</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Kotlin</span><span class="tag">Compose</span><span class="tag">Coroutines</span><span class="tag">Retrofit</span><span class="tag">CameraX</span></div>
+                </div>
+            </article>
+
+            <!-- 08 -->
+            <article class="project reveal" data-cat="data">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-08</span><span class="project__cat">ai &amp; data</span></div>
+                    <h3>Real-Time Analytics Stabilization</h3>
+                    <div class="project__org">Scott Logic · Nubank (Orion)</div>
+                    <p>Owned deep debugging and root-cause analysis on a real-time analytics engine, eliminating key production bottlenecks and turning an unstable hot path into a predictable, well-instrumented service.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">Root-cause</div><div class="l">analysis</div></div>
+                        <div class="project__stat"><div class="n">Stable</div><div class="l">hot path</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Kafka Streams</span><span class="tag">Spark</span><span class="tag">Profiling</span><span class="tag">Observability</span></div>
+                </div>
+            </article>
+
+            <!-- 09 -->
+            <article class="project reveal" data-cat="web">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-09</span><span class="project__cat">web &amp; media</span></div>
+                    <h3>Hungroo Delivery Backend</h3>
+                    <div class="project__org">Hungroo · Santos</div>
+                    <p>Built the entire backend for Santos' largest online food-delivery service — using Rails, Redis and MySQL, with a Node.js layer handling user interactions and live order updates over WebSockets.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">#1</div><div class="l">delivery in Santos</div></div>
+                        <div class="project__stat"><div class="n">Live</div><div class="l">order updates</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Ruby on Rails</span><span class="tag">Redis</span><span class="tag">MySQL</span><span class="tag">Node.js</span><span class="tag">WebSockets</span></div>
+                </div>
+            </article>
+
+            <!-- 10 -->
+            <article class="project reveal" data-cat="web">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-10</span><span class="project__cat">web &amp; media</span></div>
+                    <h3>R7 Video Delivery Pipeline</h3>
+                    <div class="project__org">R7.com · Rede Record</div>
+                    <p>On the video team of Brazil's 4th most-visited content portal: built systems to compress, parse and upload video, a full publication workflow on AWS, and the Ruby/JavaScript video CMS behind it all.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">#4</div><div class="l">portal in Brazil</div></div>
+                        <div class="project__stat"><div class="n">AWS</div><div class="l">EC2·SQS·SNS·S3</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Ruby</span><span class="tag">JavaScript</span><span class="tag">Perl</span><span class="tag">AWS</span><span class="tag">Shell</span></div>
+                </div>
+            </article>
+
+            <!-- 11 (bonus) -->
+            <article class="project reveal" data-cat="web">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-11</span><span class="project__cat">web &amp; media</span></div>
+                    <h3>LuaNet Image API &amp; BFF</h3>
+                    <div class="project__org">LuaNet · São Paulo</div>
+                    <p>Led the technical choices for a backend of Ruby microservices behind a Node.js endpoint that resolved links and built the final JSON for an Ionic frontend — plus an image-manipulation REST API written in Go with ImageMagick.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">BFF</div><div class="l">json composition</div></div>
+                        <div class="project__stat"><div class="n">Go</div><div class="l">image API</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">Ruby</span><span class="tag">Node.js</span><span class="tag">Go</span><span class="tag">ImageMagick</span><span class="tag">Ionic</span></div>
+                </div>
+            </article>
+
+            <!-- 12 (bonus) -->
+            <article class="project reveal" data-cat="platform">
+                <div class="project__band"></div>
+                <div class="project__inner">
+                    <div class="project__meta"><span class="project__no">P-12</span><span class="project__cat">platform</span></div>
+                    <h3>Mercury Cloud Optimization</h3>
+                    <div class="project__org">Nubank</div>
+                    <p>Led a multi-functional engineering program coordinating backend, infrastructure, data and product teams to optimise cloud spend and performance — then translated business objectives into a delivery roadmap.</p>
+                    <div class="project__stats">
+                        <div class="project__stat"><div class="n">Cross-fn</div><div class="l">program lead</div></div>
+                        <div class="project__stat"><div class="n">Cloud</div><div class="l">cost &amp; perf</div></div>
+                    </div>
+                    <div class="tags"><span class="tag">AWS</span><span class="tag">FinOps</span><span class="tag">Roadmapping</span><span class="tag">Infra</span></div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- ========================= EXPERIENCE ========================= -->
+<section class="section section--paper" id="experience">
+    <div class="wrap">
+        <div class="head reveal">
+            <span class="marker">04 · experience</span>
+            <h2>A decade across <em>fintech, broadcast and the classroom</em>.</h2>
+            <p>Two continents, eight companies, and roles from hands-on developer to principal engineer and tech manager.</p>
+        </div>
+
+        <div class="timeline reveal" data-d="1">
+
+            <div class="tl is-now">
+                <div class="tl__date">Mar 2024 — Present <span class="now">now</span></div>
+                <h3>Principal Software Engineer</h3>
+                <div class="tl__org">Scott Logic Ltd · United Kingdom</div>
+                <ul>
+                    <li>Designed and implemented the microservices architecture of the Nimbus Payments Platform — highly scalable, with a 99.99% uptime guarantee.</li>
+                    <li>Guided all significant technical choices on the Customer Identity &amp; Access Revamp, from tech-stack selection to integration security patterns.</li>
+                    <li>Introduced company-wide engineering standards through the Apollo API Modernization Initiative, lifting code quality, testing and deployment reliability.</li>
+                    <li>Coached and mentored engineers and directed complex feature work on the Helios AI Recommendations Engine.</li>
+                    <li>Coordinated cross-team delivery (backend, DevOps, data) on the Orion Cloud Migration Program, and led root-cause analysis that removed key production bottlenecks.</li>
+                </ul>
+            </div>
+
+            <div class="tl">
+                <div class="tl__date">Feb 2023 — Dec 2024</div>
+                <h3>Senior Android / Kotlin Developer</h3>
+                <div class="tl__org">Endava PLC · London, UK</div>
+                <ul>
+                    <li>Android development in Kotlin with Jetpack Compose, ViewModel, Hilt, Coroutines and Room.</li>
+                    <li>Built scalable designs on MVVM and Clean Architecture to improve maintainability and testability.</li>
+                    <li>Created high-performance networking layers with Retrofit, OkHttp and Coil, plus background work via WorkManager and persistence via DataStore.</li>
+                    <li>Added camera and multimedia features with CameraX and Media3 / ExoPlayer, and reviewed AI-assisted internal tooling for idiomatic, clean Kotlin.</li>
+                </ul>
+            </div>
+
+            <div class="tl">
+                <div class="tl__date">Aug 2023 — Mar 2024</div>
+                <h3>Senior Staff Software Engineer</h3>
+                <div class="tl__org">Nubank · São Paulo, Brazil</div>
+                <ul>
+                    <li>Directed the end-to-end architecture and technical strategy of the Atlas Distributed Systems Platform.</li>
+                    <li>Led multi-functional programs including Mercury Cloud Optimization, coordinating backend, infrastructure, data and product teams.</li>
+                    <li>Provided deep technical mentorship to senior engineers designing the Orion Real-Time Analytics Engine.</li>
+                    <li>Owned the most critical production parts of the Helix Core Services Layer and drove engineering excellence through the Apollo API Modernization Initiative.</li>
+                </ul>
+            </div>
+
+            <div class="tl">
+                <div class="tl__date">Sep 2020 — Apr 2022</div>
+                <h3>Tech Manager</h3>
+                <div class="tl__org">Nubank · São Paulo, Brazil</div>
+                <ul>
+                    <li>Oversaw delivery of the Atlas Platform Upgrade Project across engineering, product and QA against scope, schedule and quality goals.</li>
+                    <li>Led the Helix Core Services team's daily operations — seamless deployments, rapid incident response and high availability.</li>
+                    <li>Managed workforce planning and talent development: mentoring, performance reviews and career growth across the Orion Engineering Group.</li>
+                    <li>Applied engineering procedures — code review, sprint process, release protocols — across the Nova Digital Transformation Program.</li>
+                </ul>
+            </div>
+
+            <div class="tl">
+                <div class="tl__date">Sep 2018 — Mar 2020</div>
+                <h3>Developer, Instructor &amp; Consultant</h3>
+                <div class="tl__org">Caelum · São Paulo, Brazil</div>
+                <ul>
+                    <li>Built a wide variety of web projects for several companies using Java, Ruby and JavaScript.</li>
+                    <li>Worked across frameworks — Rails, Sinatra, Hibernate, VRaptor, Spring — all delivered with agile methods like Scrum and Kanban.</li>
+                    <li>Taught the FJ-11, FJ-16 and FJ-21 courses, covering Java fundamentals, testing and web development.</li>
+                </ul>
+            </div>
+
+            <div class="tl">
+                <div class="tl__date">Mar 2017 — Dec 2019</div>
+                <h3>Software Architect</h3>
+                <div class="tl__org">Hungroo · Santos, SP</div>
+                <ul>
+                    <li>Developed the entire backend for Hungroo.com, the largest online food-delivery service in Santos.</li>
+                    <li>Implemented it with Rails, Redis and MySQL, plus JavaScript and Node for user interactions and live updating over WebSockets.</li>
+                </ul>
+            </div>
+
+            <div class="tl">
+                <div class="tl__date">Aug 2016 — Apr 2018</div>
+                <h3>Senior Software Developer</h3>
+                <div class="tl__org">R7.com · Rede Record · São Paulo, SP</div>
+                <ul>
+                    <li>On the videos team of R7.com — Brazil's 4th most-accessed content portal — handling the full video-delivery process.</li>
+                    <li>Built systems to compress, parse and upload video and a publication workflow on AWS (EC2, SQS, SNS, S3).</li>
+                    <li>Developed the Ruby/JavaScript video CMS, working language-agnostically across Perl, Java and ShellScript.</li>
+                </ul>
+            </div>
+
+            <div class="tl">
+                <div class="tl__date">Aug 2015 — Feb 2016</div>
+                <h3>Specialist Software Developer</h3>
+                <div class="tl__org">LuaNet · São Paulo Area, Brazil</div>
+                <ul>
+                    <li>Led technical choices on language, frameworks, architecture and process, building mostly backend with some frontend.</li>
+                    <li>Architected Ruby backend microservices feeding a Node.js endpoint that composed the final JSON for an Ionic frontend.</li>
+                    <li>Built an image-manipulation REST API in Go using the ImageMagick library.</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ========================= EDUCATION ========================= -->
+<section class="section" id="education">
+    <div class="wrap">
+        <div class="head reveal">
+            <span class="marker">05 · education &amp; credentials</span>
+            <h2>Formally trained, <em>continuously sharpened</em>.</h2>
+        </div>
+
+        <div class="edu__grid">
+            <div class="edu__col reveal" data-d="1">
+                <div class="edu">
+                    <div class="edu__year">2023</div>
+                    <h3>MSc · Web and Mobile Development Technologies</h3>
+                    <p>Northumbria University — London Campus, United Kingdom</p>
+                </div>
+                <div class="edu">
+                    <div class="edu__year">2021</div>
+                    <h3>MSc · IT Architecture</h3>
+                    <p>FIAP — Brazil</p>
+                </div>
+                <div class="edu">
+                    <div class="edu__year">2017</div>
+                    <h3>BSc · Analysis and Software Development</h3>
+                    <p>FIAP — Brazil</p>
+                </div>
+            </div>
+
+            <div class="edu__col reveal" data-d="2">
+                <div class="minicard">
+                    <span class="marker">certifications</span>
+                    <div class="minicard__item"><span class="ic">✓</span><span>Sun Certified Java Programmer</span></div>
+                </div>
+                <div class="minicard">
+                    <span class="marker">languages</span>
+                    <div class="minicard__item"><span class="ic">EN</span><span>English</span><span class="lang-bar">native / bilingual</span></div>
+                    <div class="minicard__item"><span class="ic">PT</span><span>Portuguese</span><span class="lang-bar">native / bilingual</span></div>
+                </div>
+                <div class="minicard">
+                    <span class="marker">top skills</span>
+                    <div class="tags">
+                        <span class="tag">Ruby</span>
+                        <span class="tag">Ruby on Rails</span>
+                        <span class="tag">Perl</span>
+                        <span class="tag">Team development</span>
+                        <span class="tag">Quality assurance</span>
+                        <span class="tag">SDLC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= CONTACT ========================= -->
+<section class="section contact" id="contact">
+    <div class="wrap">
+        <div class="contact__box reveal">
+            <span class="marker">06 · contact</span>
+            <h2>Got a hard problem<br>that needs a <em>polyglot</em>?</h2>
+            <p>I'm open to principal and staff engineering roles, and to interesting distributed-systems and Android work. The best way to reach me is below.</p>
+            <div class="contact__links">
+                <a href="mailto:mairurawycliff31@gmail.com" class="clink">
+                    <span class="clink__ic">@</span>
+                    <span><span class="clink__k">email</span><br><span class="clink__v">mairurawycliff31@gmail.com</span></span>
+                </a>
+                <a href="tel:+441475852291" class="clink">
+                    <span class="clink__ic">☎</span>
+                    <span><span class="clink__k">phone</span><br><span class="clink__v">+44 1475 852291</span></span>
+                </a>
+                <a href="https://www.linkedin.com/in/mogendi-mairura" class="clink" target="_blank" rel="noopener">
+                    <span class="clink__ic">in</span>
+                    <span><span class="clink__k">linkedin</span><br><span class="clink__v">/in/mogendi-mairura</span></span>
+                </a>
+                <a href="https://github.com/mogendi-mairura" class="clink" target="_blank" rel="noopener">
+                    <span class="clink__ic">{ }</span>
+                    <span><span class="clink__k">github</span><br><span class="clink__v">/mogendi-mairura</span></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="footer">
+    <div class="wrap footer__inner">
+        <span class="footer__brand">mogendi<span class="accent">.</span>mairura</span>
+        <p>Ipswich, UK · Built from scratch, no template.</p>
+        <a href="#top" class="footer__top">back to top ↑</a>
+    </div>
+</footer>
+
+<script>
+(function(){
+    "use strict";
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---- Nav: stuck state + mobile menu + active link ---- */
+    var nav = document.getElementById('nav');
+    var burger = document.getElementById('burger');
+    var navLinks = document.getElementById('navLinks');
+
+    function onScroll(){
+        if(window.scrollY > 24){ nav.classList.add('is-stuck'); }
+        else { nav.classList.remove('is-stuck'); }
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+
+    burger.addEventListener('click', function(){
+        var open = nav.classList.toggle('is-open');
+        burger.setAttribute('aria-expanded', open ? 'true':'false');
+    });
+    navLinks.addEventListener('click', function(e){
+        if(e.target.closest('a')){ nav.classList.remove('is-open'); burger.setAttribute('aria-expanded','false'); }
+    });
+
+    /* active section highlight */
+    var sections = ['about','stack','work','experience','education','contact'];
+    var linkMap = {};
+    navLinks.querySelectorAll('a').forEach(function(a){
+        var href = a.getAttribute('href');
+        if(href && href.charAt(0) === '#'){ linkMap[href.slice(1)] = a; }
+    });
+    var spy = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+            if(en.isIntersecting){
+                Object.values(linkMap).forEach(function(l){ l.classList.remove('is-active'); });
+                var l = linkMap[en.target.id];
+                if(l){ l.classList.add('is-active'); }
+            }
+        });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(id){ var el = document.getElementById(id); if(el){ spy.observe(el); } });
+
+    /* ---- Scroll reveal ---- */
+    var reveals = document.querySelectorAll('.reveal');
+    if(reduceMotion){
+        reveals.forEach(function(r){ r.classList.add('is-in'); });
+    } else {
+        var io = new IntersectionObserver(function(entries){
+            entries.forEach(function(en){
+                if(en.isIntersecting){ en.target.classList.add('is-in'); io.unobserve(en.target); }
+            });
+        }, {threshold:0.12});
+        reveals.forEach(function(r){ io.observe(r); });
+    }
+
+    /* ---- Animated counters ---- */
+    var counters = document.querySelectorAll('[data-count]');
+    var cObs = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+            if(!en.isIntersecting) return;
+            var el = en.target;
+            cObs.unobserve(el);
+            var target = parseFloat(el.getAttribute('data-count'));
+            var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+            var suffix = el.getAttribute('data-suffix') || '';
+            if(reduceMotion){ el.textContent = target.toFixed(decimals) + suffix; return; }
+            var start = null, dur = 1500;
+            function step(ts){
+                if(!start) start = ts;
+                var p = Math.min((ts - start) / dur, 1);
+                var eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = (target * eased).toFixed(decimals) + suffix;
+                if(p < 1){ requestAnimationFrame(step); }
+                else { el.textContent = target.toFixed(decimals) + suffix; }
+            }
+            requestAnimationFrame(step);
+        });
+    }, {threshold:0.5});
+    counters.forEach(function(c){ cObs.observe(c); });
+
+    /* ---- Polyglot meter fills ---- */
+    var poly = document.getElementById('poly');
+    if(poly){
+        var pObs = new IntersectionObserver(function(entries){
+            entries.forEach(function(en){
+                if(!en.isIntersecting) return;
+                pObs.unobserve(en.target);
+                en.target.querySelectorAll('.poly__fill').forEach(function(f){
+                    var w = f.getAttribute('data-w') + '%';
+                    if(reduceMotion){ f.style.transition='none'; }
+                    requestAnimationFrame(function(){ f.style.width = w; });
+                });
+            });
+        }, {threshold:0.3});
+        pObs.observe(poly);
+    }
+
+    /* ---- Project filtering ---- */
+    var filters = document.getElementById('filters');
+    var projects = document.querySelectorAll('#projGrid .project');
+    if(filters){
+        filters.addEventListener('click', function(e){
+            var btn = e.target.closest('.filter');
+            if(!btn) return;
+            filters.querySelectorAll('.filter').forEach(function(f){ f.classList.remove('is-active'); });
+            btn.classList.add('is-active');
+            var cat = btn.getAttribute('data-filter');
+            projects.forEach(function(p){
+                var show = (cat === 'all' || p.getAttribute('data-cat') === cat);
+                p.classList.toggle('is-hidden', !show);
+            });
+        });
+    }
+
+    /* ---- Hero terminal typing ---- */
+    var typed = document.getElementById('typed');
+    var cursor = document.getElementById('cursor');
+    var out = document.getElementById('termOut');
+    var cmd = 'whoami --verbose';
+    var outputHTML =
+        '<div class="terminal__line"><span class="t-key">name</span>      <span class="t-out">Mogendi Mairura</span></div>' +
+        '<div class="terminal__line"><span class="t-key">role</span>      <span class="t-out">Principal Software Engineer</span></div>' +
+        '<div class="terminal__line"><span class="t-key">based</span>     <span class="t-out">Ipswich, United Kingdom</span></div>' +
+        '<div class="terminal__line"><span class="t-key">langs</span>     <span class="t-str">["ruby","java","kotlin","go","js"]</span></div>' +
+        '<div class="terminal__line"><span class="t-key">focus</span>     <span class="t-out">distributed systems · scale</span></div>' +
+        '<div class="terminal__line"><span class="t-key">motto</span>     <span class="t-str">"driven by the challenge"</span></div>' +
+        '<div class="terminal__line" style="margin-top:10px;"><span class="t-comment"># status: ready to build →</span></div>';
+
+    function typeCmd(){
+        if(reduceMotion){
+            typed.textContent = cmd;
+            out.innerHTML = outputHTML;
+            return;
+        }
+        var i = 0;
+        function tick(){
+            if(i <= cmd.length){
+                typed.textContent = cmd.slice(0, i);
+                i++;
+                setTimeout(tick, 60);
+            } else {
+                setTimeout(function(){
+                    out.innerHTML = outputHTML;
+                    var lines = out.querySelectorAll('.terminal__line');
+                    lines.forEach(function(ln, idx){
+                        ln.style.opacity = '0';
+                        ln.style.transform = 'translateY(4px)';
+                        ln.style.transition = 'opacity .35s, transform .35s';
+                        setTimeout(function(){ ln.style.opacity='1'; ln.style.transform='none'; }, idx*130);
+                    });
+                }, 350);
+            }
+        }
+        tick();
+    }
+    var heroSeen = false;
+    var hObs = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+            if(en.isIntersecting && !heroSeen){ heroSeen = true; typeCmd(); }
+        });
+    }, {threshold:0.4});
+    var term = document.getElementById('terminal');
+    if(term){ hObs.observe(term); }
+
+    /* ---- year in footer is static; nothing else needed ---- */
+})();
+</script>
+
+</body>
+</html>
